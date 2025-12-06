@@ -1,26 +1,78 @@
+"use client";
+
 import Image from "next/image";
-import { navItems } from "@/data/Appbar";
 import Link from "next/link";
+import { useState } from "react";
+import { navItems } from "@/data/Appbar";
 
+export default function Appbar() {
+  const [open, setOpen] = useState(false);
 
-export default function Appbar(){
-    return (
-        <div className="px-2 py-5 border-b-2 border-gray-300">
-            <div className="max-w-9/12 mx-auto flex items-center justify-between">
-                <div className="hover:cursor-pointer">
-                    <Image src="https://zerodha.com/static/images/logo.svg" alt="Logo" width={150} height={50} />
-                </div>
+  return (
+    <div className="px-4 py-5 border-b border-gray-300">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
 
-                <div className="flex items-center justify-center gap-10">
-                    {
-                        navItems.map((item, index) => (
-                            <Link className="text-[16px] font-normal font-sans hover:text-[#387ED1] hover:text-shadow-2xs transition duration-200" href={item.path} key={index}>
-                                {item.label}
-                            </Link>
-                        ))
-                    }
-                </div>
-            </div>
+        {/* Logo */}
+        <div className="hover:cursor-pointer">
+          <Image
+            src="https://zerodha.com/static/images/logo.svg"
+            alt="Logo"
+            width={150}
+            height={50}
+          />
         </div>
-    )
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-10">
+          {navItems.map((item, index) => (
+            <Link
+              className="text-[16px] font-normal font-sans hover:text-[#387ED1] transition duration-200"
+              href={item.path}
+              key={index}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Hamburger Icon */}
+        <div className="md:hidden cursor-pointer" onClick={() => setOpen(!open)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-7"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d={
+                open
+                  ? "M6 18L18 6M6 6l12 12" // X icon
+                  : "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" // Hamburger
+              }
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Mobile Dropdown Menu */}
+      {open && (
+        <div className="md:hidden mt-4 space-y-4 px-2 pb-4">
+          {navItems.map((item, index) => (
+            <Link
+              className="block text-[16px] py-2 border-b border-gray-200 hover:text-[#387ED1] transition"
+              href={item.path}
+              key={index}
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
